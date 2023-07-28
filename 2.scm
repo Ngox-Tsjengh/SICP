@@ -22,3 +22,19 @@
 )
 
 ;;;;;;;;;; Excercise 2.6 ;;;;;;;;;;
+(define zero (lambda (f) (lambda(x) x)))
+
+(define (add-1 n)
+  (lambda (f) (lambda (x) (f ((n f) x)))))
+
+  
+ (define (int-to-church n) 
+   (define (iter a result) 
+     (if (> a n) 
+       zero 
+       (add-1 (iter (+ a 1) result)) 
+       )) 
+   (iter 1 zero)) 
+  
+ (define (church-to-int cn) 
+   ((cn (lambda (n) (+ n 1))) 0))
