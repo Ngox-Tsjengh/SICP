@@ -61,3 +61,25 @@ If we want let the result be correct, either we change the code fundamentally, o
 
 #+RESULTS:
 : (25 16 9 4 1)
+
+19. We want to rewrite the procedure cc so that its second argument is a list of the values of the coins to use rather than an integer specifying which coins to use. We could then have lists that defined each kind of currency. We could then call cc as follows: ~(cc 100 us-coins)~, Define the procedures ~first-denomination~, ~except-firstdenomination~, and ~no-more?~ in terms of primitive operations on list structures. Does the order of the list coinvalues affect the answer produced by cc? Why or why not?
+
+#+begin_src racket :tangle ex2.scm
+#lang sicp
+(define us-coins (list 50 25 10 5 1))
+(define uk-coins (list 100 50 20 10 5 2 1 0.5))
+
+(define (cc amount coin-values)
+  (cond ((= amount 0) 1)
+        ((or (< amount 0) (no-more? coin-values)) 0)
+        (else
+         (+ (cc amount
+                (except-first-denomination
+                 coin-values))
+            (cc (- amount
+                   (first-denomination
+                    coin-values))
+                coin-values)))))
+
+(define )
+#+end_src
