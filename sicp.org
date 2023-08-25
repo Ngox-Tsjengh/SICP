@@ -1,0 +1,63 @@
+#+title: Structure and Interpretation of Computer Program
+#+author: Tengs Penkwe
+#+date: <2023-08-24 Thu>
+
+* Building Abstraction with Data
+** Data Abstraction
+16. Explain, in general, why equivalent algebraic expressions may lead to different answers. Can you devise an interval-arithmetic package that does not have this shortcoming, or is this task impossible?
+
+*Mathematical Explanation*
+We can see it as a problem of finding extrema of n-variate functions.
+for R1, R2, R_, ... these are variables,
+The interval of R1, R2, R_, ... are the definition fields.
+The operations on variables are the function.
+And we want to find the maximum and minimum of the function in the definition fields.
+For the general questions, It's very clear that for most functions, their extrema won't be found in the border, so we can't simple get the result by operating on lower and upper bound.
+For the specific question there, the problem is that the functions Lem wrote assume the variables are independent. If the variables are dependent, the result is wrong.
+For example, R1 = [1, 2]; R2 = R1 + 1=[2, 3], then R1 and R2 are dependent, so R1 - R2 = 1, and (sub-interval R1 R2) = [0, 2]  is wrong.
+Here, for par1, R1*R2 and R1+R2 are dependent, so (div-interval R1*R2 R1+R2) got wrong answer.
+But, for pa2, [1,1] and R1; [1,1] and R2; 1/R1 and 1/R2; [1,1] and 1/R1 + 1/R2; they are all independent, so the result is right.
+If we want let the result be correct, either we change the code fundamentally, or we need to ensure for each operation, their operands should be independent.
+
+** Hierarchical Data & Closure
+17. Define a procedure /last-pair/ that returns the list that contains only the last element of a given (nonempty) list:
+
+#+BEGIN_SRC racket :tangle ex2.scm
+#lang sicp
+(define (last-pair items)
+  (let ((rest (cdr items)))
+    (if (null? rest)
+        items
+        (last-pair rest))
+  ))
+
+(last-pair (list 23 72 149 34))
+#+END_SRC
+
+#+RESULTS:
+| 34 |
+
+18. Define a procedure reverse that takes a list as argument and returns a list of the same elements in reverse order:
+
+#+BEGIN_SRC racket :tangle ex2.scm
+#lang sicp
+;; (define (reverse items)
+;;   (let ((rest (cdr items)) (first (car items)))
+;;     (if (null? rest)
+;;         (cons items nil)
+;;         (cons (reverse rest) first)
+;;         )))
+; Fail because the structure of the list, also it uses recursion and will like have low performance
+(define (reverse items)
+  (define (iter items result)
+    (if (null? items)
+        result
+        (iter (cdr items) (cons (car items) result))))
+  (iter items nil))
+; Use loop instead of recursion
+
+(reverse (list 1 4 9 16 25))
+#+END_SRC
+
+#+RESULTS:
+: (25 16 9 4 1)
