@@ -2,6 +2,8 @@
 #+author: Tengs Penkwe
 #+date: <2023-08-24 Thu>
 
+This is the answers to the SICP book, you can also check [[http://community.schemewiki.org/?sicp-solutions][sicp-solutions]]
+
 * Building Abstraction with Data
 ** Data Abstraction
 16. Explain, in general, why equivalent algebraic expressions may lead to different answers. Can you devise an interval-arithmetic package that does not have this shortcoming, or is this task impossible?
@@ -64,10 +66,19 @@ If we want let the result be correct, either we change the code fundamentally, o
 
 19. We want to rewrite the procedure cc so that its second argument is a list of the values of the coins to use rather than an integer specifying which coins to use. We could then have lists that defined each kind of currency. We could then call cc as follows: ~(cc 100 us-coins)~, Define the procedures ~first-denomination~, ~except-firstdenomination~, and ~no-more?~ in terms of primitive operations on list structures. Does the order of the list coinvalues affect the answer produced by cc? Why or why not?
 
+    This is like a Non-deterministic Turing Machine, for each amount we have multiple ways to get this number,
+
 #+begin_src racket :tangle ex2.scm
 #lang sicp
 (define us-coins (list 50 25 10 5 1))
 (define uk-coins (list 100 50 20 10 5 2 1 0.5))
+
+(define (except-first-denomination values)
+  (cdr values))
+(define (first-denomination values)
+  (car values))
+(define (no-more? values)
+  (null? values))
 
 (define (cc amount coin-values)
   (cond ((= amount 0) 1)
@@ -81,5 +92,8 @@ If we want let the result be correct, either we change the code fundamentally, o
                     coin-values))
                 coin-values)))))
 
-(define )
+(cc 100 us-coins)
 #+end_src
+
+#+RESULTS:
+: 292
