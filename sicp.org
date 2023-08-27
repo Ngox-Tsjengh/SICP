@@ -64,9 +64,9 @@ If we want let the result be correct, either we change the code fundamentally, o
 #+RESULTS:
 : (25 16 9 4 1)
 
-19. We want to rewrite the procedure cc so that its second argument is a list of the values of the coins to use rather than an integer specifying which coins to use. We could then have lists that defined each kind of currency. We could then call cc as follows: ~(cc 100 us-coins)~, Define the procedures ~first-denomination~, ~except-firstdenomination~, and ~no-more?~ in terms of primitive operations on list structures. Does the order of the list coinvalues affect the answer produced by cc? Why or why not?
+19. We want to rewrite the procedure cc so that its second argument is a list of the values of the coins to use rather than an integer specifying which coins to use. We could then have lists that defined each kind of currency. We could then call cc as follows: ~(cc 100 us-coins)~, Define the procedures ~first-denomination~, ~except-firstdenomination~, and ~no-more?~ in terms of primitive operations on list structures. Does the order of the list ~coin-values~ affect the answer produced by cc? Why or why not?
 
-    This is like a Non-deterministic Turing Machine, for each amount we have multiple ways to get this number,
+    This is like a Non-deterministic Turing Machine, for each amount we have multiple ways to get this number, and each amount can add up to some amount, the order doesn't matter.
 
 #+begin_src racket :tangle ex2.scm
 #lang sicp
@@ -97,3 +97,29 @@ If we want let the result be correct, either we change the code fundamentally, o
 
 #+RESULTS:
 : 292
+
+20. The procedures +, *, and ~list~ take arbitrary numbers of arguments. One way to define such procedures is to use ~define~ with /dotted-tail notation/. Use this notation to write a procedure same-parity that takes one or more integers and returns a list of all the arguments that have the same even-odd parity as the first argument.
+
+    #+begin_src racket :tangle ex2.scm
+    #lang sicp
+    (define (same-parity a . c)
+      (define (same-with-first ele)
+        (if (odd? a)
+            (odd? ele)
+            (even? ele))
+        )
+      (define (appends lst ele)
+        (if (same-with-first ele)
+            (append lst (list ele))      ;;The list structure inside LiSP is quite embrrassing
+            lst)
+        )
+      (define (iter lst result)
+        (if (null? lst)
+            result
+            (iter (cdr lst) (appends result (car lst))))
+        )
+      (iter c (cons a nil))
+      )
+    (same-parity 1 2 3 4 5 6 7)
+    (same-parity 2 3 4 5 6 7)
+    #+end_src
